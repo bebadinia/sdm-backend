@@ -1,8 +1,21 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.10
+FROM python:3.10-slim
 
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install --no-cache -r /tmp/requirements.txt
+WORKDIR /app
 
-COPY . /app
-COPY uwsgi.docker.ini /app/uwsgi.ini
-COPY config.docker.py /app/config.py
+# Install required system packages
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY . .
+
+# Railway configuration
+ENV PORT=5000
+EXPOSE 5000
+
+CMD ["python", "app.py"]

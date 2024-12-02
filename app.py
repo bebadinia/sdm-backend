@@ -3,6 +3,7 @@
 import argparse
 import binascii
 import io
+import os
 
 from flask import Flask, jsonify, render_template, request
 from werkzeug.exceptions import BadRequest
@@ -301,10 +302,5 @@ def _internal_sdm(with_tt=False, force_json=False):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='OTA NFC Server')
-    parser.add_argument('--host', type=str, nargs='?', help='address to listen on')
-    parser.add_argument('--port', type=int, nargs='?', help='port to listen on')
-
-    args = parser.parse_args()
-
-    app.run(host=args.host, port=args.port)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
