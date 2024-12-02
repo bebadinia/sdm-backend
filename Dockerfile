@@ -7,16 +7,21 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install Python requirements
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
+# Copy config file specifically
+COPY config.py .
+
+# Copy all other files
 COPY . .
-# No need to copy config.docker.py since we're using config.py directly
 
 # Railway configuration
 ENV PORT=5000
 EXPOSE 5000
+
+# For debugging: List files in /app
+RUN ls -la /app
 
 CMD ["python", "app.py"]
