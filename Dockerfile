@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY . .
+# No need to copy config.docker.py since we're using config.py directly
 
 # Railway configuration
 ENV PORT=5000
